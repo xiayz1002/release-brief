@@ -1,0 +1,20 @@
+[
+  {
+    "repository": "demo/release-brief",
+    "version": "v1.0.0",
+    "description": "新增版本列表功能",
+    "prerelease": false
+  },
+  {
+    "repository": "demo/release-brief",
+    "version": "v1.1.0-beta",
+    "description": "测试版本筛选功能",
+    "prerelease": true
+  },
+  {
+    "repository": "demo/release-brief",
+    "version": "v1.1.0",
+    "description": "新增正式版本筛选功能",
+    "prerelease": false
+  }
+]
