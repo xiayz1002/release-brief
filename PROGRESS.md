@@ -55,5 +55,21 @@ HTTP 状态码：200
 ### 下一步
 
 为 Release 增加外部 ID、原始链接和发布时间。不存在仓库、网络故障和本地 JSON 错误的完整验证仍待补充。
+## 2026-11-04：拆分解析与筛选职责
 
+- 新增 ReleaseParser.parseGitHub：将 GitHub JSON 转换为 Release 列表。
+- 新增 ReleaseFilter.onlyStable：返回正式版本列表，不修改原列表。
+- GitHubDemo 保留请求和流程组织，复用 Main.printRelease 展示。
+- 同步 README 的启动参数、字段补齐与代码结构说明。
 
+### 验证
+
+- 全部 Java 源码编译通过。
+- 临时断言检查通过：七个字段映射、空更新说明回退、正式版本筛选、原列表保留、空列表、全预发布列表、无效 JSON、null 数组与 null 元素拒绝。
+- Main 本地 JSON 示例：仍展示两个正式版本。
+- GitHubDemo google/gson 真实请求与三条数据解析验证：True。
+- 本轮使用临时检查程序，没有向项目添加正式 JUnit 测试文件；后续将补充可持续运行的测试。
+
+### 下一步
+
+为解析与筛选添加 JUnit 测试，再逐步拆分参数校验和网络请求。

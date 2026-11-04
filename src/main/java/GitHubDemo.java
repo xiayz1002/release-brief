@@ -5,13 +5,27 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import com.google.gson.Gson;
+import java.util.List;
 import com.google.gson.JsonParseException;
 
 public class GitHubDemo {
 
     public static void main(String[] args) {
-        String repository = "spring-projects/spring-ai";
+        if (args.length > 1) {
+            System.err.println("只接受一个仓库参数，格式：owner/repo");
+            return;
+        }
+
+        String repository = args.length == 0
+                ? "spring-projects/spring-ai"
+                : args[0];
+
+        if (!repository.matches("[A-Za-z0-9-]+/[A-Za-z0-9_.-]+")) {
+            System.err.println("仓库格式不正确，请使用 owner/repo");
+            System.err.println("例如：spring-projects/spring-ai");
+            return;
+        }
+
         String url = "https://api.github.com/repos/"
                 + repository + "/releases?per_page=3";
 
@@ -45,36 +59,15 @@ public class GitHubDemo {
             }
 
             String json = response.body();
+            List<Release> releases = ReleaseParser.parseGitHub(json, repository);
+            List<Release> stableReleases = ReleaseFilter.onlyStable(releases);
 
-            Gson gson = new Gson();
-            GitHubRelease[] releases = gson.fromJson(
-                    json,
-                    GitHubRelease[].class
-            );
-
-            if (releases == null) {
-                throw new JsonParseException("GitHub 返回的 Release 列表为 null");
-            }
-
-            int count = 0;
-
-            for (GitHubRelease githubRelease : releases) {
-                if (githubRelease == null) {
-                    throw new JsonParseException("Release 列表中包含 null");
-                }
-
-                Release release = githubRelease.toRelease(repository);
-
-                if (release.isPrerelease()) {
-                    continue;
-                }
-
+            for (Release release : stableReleases) {
                 Main.printRelease(release);
-                count++;
             }
 
-            System.out.println("本次获取 " + releases.length + " 条 Release");
-            System.out.println("其中正式版本 " + count + " 条");
+            System.out.println("本次获取 " + releases.size() + " 条 Release");
+            System.out.println("其中正式版本 " + stableReleases.size() + " 条");
 
         } catch (IOException e) {
             System.err.println("网络请求失败：" + e.getMessage());
@@ -82,7 +75,7 @@ public class GitHubDemo {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.err.println("请求被中断");
-        }catch (JsonParseException e) {
+        } catch (JsonParseException e) {
             System.err.println("GitHub 数据解析失败：" + e.getMessage());
         }
     }

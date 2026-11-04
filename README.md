@@ -25,13 +25,15 @@ Java 21、Maven、Gson、GitHub REST API。
 
 本地文件示例的工作目录应为项目根目录。网络示例需要能够访问 api.github.com。
 
-当前请求仓库为 spring-projects/spring-ai，可在 GitHubDemo.java 中修改 repository 变量。每次只请求一页、最多三条 Release，因此筛选后可能没有正式版本。
+默认请求仓库为 spring-projects/spring-ai，可在 GitHubDemo 的程序参数中填写 google/gson 等 owner/repo 来指定仓库。每次只请求一页、最多三条 Release，因此筛选后可能没有正式版本。
 
 ## 代码结构
 
 - Main.java：本地数据读取与信息打印。
 - Release.java：项目内部使用的版本对象。
-- GitHubDemo.java：请求 GitHub、解析数据与筛选展示。
+- GitHubDemo.java：发送 GitHub 请求，组织解析、筛选和展示流程。
+- ReleaseParser.java：解析 GitHub JSON 并返回 Release 列表。
+- ReleaseFilter.java：筛选正式版本，保留输入列表。
 - GitHubRelease.java：接收 GitHub 字段并转换为 Release。
 - releases.json：本地模拟数据。
 
@@ -41,9 +43,10 @@ Java 21、Maven、Gson、GitHub REST API。
 - [x] 本地 JSON 读取与版本筛选
 - [x] GitHub Release 请求与对象转换代码
 - [ ] 整理真实接口运行结果与异常验证记录
-- [ ] 从命令行参数指定仓库
-- [ ] 保留 Release ID、原始链接与发布时间
-- [ ] 将网络请求、解析和展示拆分
+- [x] 从命令行参数指定仓库
+- [x] 保留 Release ID、原始链接与发布时间
+- [x] 拆分 GitHub JSON 解析和正式版本筛选
+- [ ] 进一步拆分网络请求和展示逻辑
 - [ ] 接入 Spring Boot 与 MySQL
 - [ ] 实现去重、任务状态与有限重试
 - [ ] 接入 AI 中文摘要并保留来源
