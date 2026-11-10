@@ -31,7 +31,8 @@ Java 21、Maven、Gson、GitHub REST API。
 
 - Main.java：本地数据读取与信息打印。
 - Release.java：项目内部使用的版本对象。
-- GitHubDemo.java：发送 GitHub 请求，组织解析、筛选和展示流程。
+- GitHubDemo.java：处理启动参数，组织请求、解析、筛选和展示流程。
+- GitHubReleaseClient.java：构造并发送 HTTP 请求，检查状态码，返回原始 JSON；失败时抛出异常。
 - ReleaseParser.java：解析 GitHub JSON 并返回 Release 列表。
 - ReleaseFilter.java：筛选正式版本，保留输入列表。
 - GitHubRelease.java：接收 GitHub 字段并转换为 Release。
@@ -46,7 +47,8 @@ Java 21、Maven、Gson、GitHub REST API。
 - [x] 从命令行参数指定仓库
 - [x] 保留 Release ID、原始链接与发布时间
 - [x] 拆分 GitHub JSON 解析和正式版本筛选
-- [ ] 进一步拆分网络请求和展示逻辑
+- [x] 拆分 GitHub 网络请求客户端
+- [ ] 进一步拆分展示逻辑
 - [ ] 接入 Spring Boot 与 MySQL
 - [ ] 实现去重、任务状态与有限重试
 - [ ] 接入 AI 中文摘要并保留来源
